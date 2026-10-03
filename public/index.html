@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neon Rail Runner — Jev vs Gemini</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff2bd6;--cyan:#19f3ff;--yellow:#ffe14d;--bg:#07021a;color-scheme:dark;font-family:Orbitron,system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;overflow:hidden}
+body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input{font:inherit}
+button{font-size:.82rem;font-weight:900;color:#fff;background:rgba(255,43,214,.18);border:2px solid var(--pink);border-radius:9px;padding:9px 18px;cursor:pointer;box-shadow:0 0 15px rgba(255,43,214,.4)}
+button:hover{background:rgba(255,43,214,.32)}button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+#top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:72px;padding:10px 16px;background:#0d0527;border-bottom:1px solid #50316f;z-index:2}
+#top h1{margin:0;font-size:clamp(.9rem,2.4vw,1.45rem);font-weight:900;letter-spacing:.05em;white-space:nowrap;background:linear-gradient(90deg,var(--pink),var(--cyan));background-clip:text;color:transparent}
+#top .controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+#top label{display:flex;align-items:center;gap:7px;color:#d9c8ff;font-size:.68rem;white-space:nowrap}
+#top input{accent-color:var(--cyan)}
+#arena{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;background:#32145a}
+.game{position:relative;min-width:0;min-height:0;overflow:hidden;background:var(--bg)}
+.game canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:12px 14px;pointer-events:none;text-shadow:0 0 12px #000,0 0 12px var(--cyan)}
+.hud strong{display:block;font-size:clamp(.86rem,2vw,1.2rem);font-weight:900}
+.hud .model{font-size:.55rem;color:#cbb8ec;letter-spacing:.08em}
+.score{text-align:right}.score strong{color:var(--yellow)}
+.data{position:absolute;left:10px;right:10px;bottom:10px;padding:9px 11px;border:1px solid var(--cyan);border-radius:9px;background:rgba(7,2,26,.84);box-shadow:0 0 13px rgba(25,243,255,.25);font:500 .65rem/1.5 Orbitron,system-ui,sans-serif;pointer-events:none}
+.game.gemini .data{border-color:var(--pink);box-shadow:0 0 13px rgba(255,43,214,.25)}
+.decision{min-height:1.5em;color:var(--cyan);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.game.gemini .decision{color:var(--pink)}
+.metrics{display:flex;flex-wrap:wrap;gap:3px 12px;color:#ded3f1}.metrics b{color:#fff}
+.crash{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(7,2,26,.6);text-align:center;pointer-events:none;text-shadow:0 0 15px #000}
+.crash.on{display:flex}.crash h2{font-size:clamp(1.4rem,4vw,2.8rem);margin:0;color:var(--pink)}.crash p{font-size:.8rem}
+#notice{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;padding:20px;max-width:400px;text-align:center;background:rgba(7,2,26,.88);border:1px solid #664797;border-radius:12px;pointer-events:none;font-size:.85rem;line-height:1.6}
+#notice.off{display:none}
+@media(max-width:700px) and (orientation:portrait){#top{min-height:58px;padding:7px 10px}#top h1{font-size:.75rem}#top .controls{gap:6px}#top label{font-size:.52rem}button{font-size:.62rem;padding:7px 9px}#arena{grid-template-columns:1fr;grid-template-rows:repeat(2,minmax(0,1fr))}.hud{padding:6px 8px}.hud strong{font-size:.75rem}.hud .model{display:none}.data{left:6px;right:6px;bottom:5px;padding:4px 7px;font-size:.5rem;line-height:1.35}.metrics{gap:1px 7px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+</style>
+</head>
+<body>
+<header id="top"><h1>NEON RAIL: JEV VS GEMINI</h1><div class="controls"><label><input type="checkbox" id="safety"> Safety net for both</label><button id="start">Start both</button></div></header>
+<main id="arena">
+  <section class="game jev" id="jev-game" aria-label="Jev game"><div class="hud"><div><strong>JEV</strong><span class="model">OpenRouter / System One</span></div><div class="score"><strong class="points">0</strong><span class="coins">0 coins</span></div></div><div class="data"><div class="decision">Ready to run</div><div class="metrics"><span>safe <b class="safe">0/0</b></span><span>late <b class="late">0</b></span><span>errors <b class="errors">0</b></span><span>avg <b class="latency">—</b></span><span class="net"></span></div></div><div class="crash"><h2>Crashed</h2><p></p></div></section>
+  <section class="game gemini" id="gemini-game" aria-label="Gemini game"><div class="hud"><div><strong>GEMINI 3.8 FLASH</strong><span class="model">Google Gemini API</span></div><div class="score"><strong class="points">0</strong><span class="coins">0 coins</span></div></div><div class="data"><div class="decision">Ready to run</div><div class="metrics"><span>safe <b class="safe">0/0</b></span><span>late <b class="late">0</b></span><span>errors <b class="errors">0</b></span><span>avg <b class="latency">—</b></span><span class="net"></span></div></div><div class="crash"><h2>Crashed</h2><p></p></div></section>
+</main>
+<div id="notice">Two models, one course. Press <b>Start both</b> to watch them play.</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="module" src="/game.js"></script>
+</body>
+</html>
